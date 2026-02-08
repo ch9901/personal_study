@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import { useEffect } from "react";
+import style from "./global-layout.module.css";
 
 export default function GlobalLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -9,7 +10,7 @@ export default function GlobalLayout({ children }: { children: ReactNode }) {
     router.prefetch("/book/1");
   }, []);
   return (
-    <div>
+    <div className={style.container}>
       <header>
         <Link href={"/"}>Home</Link>&nbsp;
         <Link href={"/search"} prefetch={false}>

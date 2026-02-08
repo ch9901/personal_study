@@ -1,6 +1,8 @@
+import SearchbarLayout from "@/components/searchbar-layout";
 import { useRouter } from "next/router";
+import { ReactNode } from "react";
 
-export default function Search() {
+export default function Page() {
   const route = useRouter();
   console.log(route);
 
@@ -10,3 +12,6 @@ export default function Search() {
     </div>
   );
 }
+Page.getLayout = (page: ReactNode) => {
+  return <SearchbarLayout>{page}</SearchbarLayout>;
+};
