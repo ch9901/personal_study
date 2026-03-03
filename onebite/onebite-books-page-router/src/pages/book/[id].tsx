@@ -3,19 +3,37 @@ import style from "./[id].module.css";
 import {
   GetServerSideProps,
   GetServerSidePropsContext,
+  GetStaticPropsContext,
   InferGetServerSidePropsType,
+  InferGetStaticPropsType,
 } from "next";
 import fetchOneBook from "@/lib/fetch-one-book";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getStaticProps(context: GetStaticPropsContext) {
   const id = context.params!.id;
   const book = await fetchOneBook(Number(id));
   return { props: { book } };
 }
 
+export function getStaticPaths() {
+  return {
+    paths: [
+      { params: { id: `1` } },
+      { params: { id: `2` } },
+      { params: { id: `3` } },
+    ],
+    fallback: true,
+  };
+}
+
 export default function Page({
   book,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+  if (router.isFallback) {
+    return <div>로딩중 입니다.</div>;
+  }
+
   if (!book) return <div>오류가 발생했습니다. 다시시도해주세요</div>;
   const { id, title, subTitle, description, author, publisher, coverImgUrl } =
     book;
