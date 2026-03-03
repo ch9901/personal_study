@@ -8,6 +8,7 @@ import {
   InferGetStaticPropsType,
 } from "next";
 import fetchOneBook from "@/lib/fetch-one-book";
+import fetchBooks from "@/lib/fetch-books";
 
 export async function getStaticProps(context: GetStaticPropsContext) {
   const id = context.params!.id;
@@ -15,14 +16,11 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   return { props: { book } };
 }
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const books = await fetchBooks();
   return {
-    paths: [
-      { params: { id: `1` } },
-      { params: { id: `2` } },
-      { params: { id: `3` } },
-    ],
-    fallback: true,
+    paths: [books.map((book) => ({ params: { id: book.id.toString() } }))],
+    fallback: false,
   };
 }
 
