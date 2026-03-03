@@ -1,12 +1,27 @@
 import SearchbarLayout from "@/components/searchbar-layout";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
-import books from "@/mock/book.json";
+// import books from "@/mock/book.json";
 import BookItem from "@/components/book-item";
+import {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+  InferGetStaticPropsType,
+} from "next";
+import fetchBooks from "@/lib/fetch-books";
 
-export default function Page() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const q = context.query.q;
+  const books = await fetchBooks(q as string);
+  console.log(books);
+  return { props: { books } };
+}
+
+export default function Page({
+  books,
+}: InferGetStaticPropsType<typeof getServerSideProps>) {
   const route = useRouter();
-  console.log(route);
+  console.log(books);
 
   return (
     // <div>

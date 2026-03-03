@@ -4,27 +4,32 @@ import SearchbarLayout from "@/components/searchbar-layout";
 import books from "@/mock/book.json";
 import BookItem from "@/components/book-item";
 import { InferGetStaticPropsType } from "next";
+import fetchBooks from "@/lib/fetch-books";
+import fetchRandomBooks from "@/lib/fetch-random-books";
 
-export function getServerSideProps() {
-  const data = "임시데이터";
-  return { props: { data } };
+export async function getServerSideProps() {
+  const allBooks = await fetchBooks();
+  const randomBooks = await fetchRandomBooks();
+
+  return { props: { allBooks, randomBooks } };
 }
 
 export default function Home({
-  data,
+  allBooks,
+  randomBooks,
 }: InferGetStaticPropsType<typeof getServerSideProps>) {
-  console.log(data);
+  console.log(allBooks, randomBooks);
   return (
     <div className={style.container}>
       <section>
         <h3>지금 추천하는 도서</h3>
-        {books.map((book) => (
+        {randomBooks.map((book) => (
           <BookItem key={`recommend-${book.id}`} {...book} />
         ))}
       </section>
       <section>
         <h3>등록된 모든 도서</h3>
-        {books.map((book) => (
+        {allBooks.map((book) => (
           <BookItem key={`all-${book.id}`} {...book} />
         ))}
       </section>
